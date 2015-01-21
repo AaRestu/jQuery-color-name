@@ -62,40 +62,40 @@
  			hsl.l = (max + min) / 2;
 
  			if(max == min){
-			        hsl.h = hsl.s = 0; // achromatic
-			    }else{
-			    	var d = max - min;
-			    	hsl.s = hsl.l > 0.5 ? d / (2 - max - min) : d / (max + min);
-			    	switch(max){
-			    		case r: 
-			    		hsl.h = 60 * (((g - b) / d) % 6); 
-			    		if (hsl.h < 0) {
-			    			hsl.h += 360;
-			    		}
-			    		break;
-			    		case g: hsl.h = 60 * ((b - r) / d + 2); break;
-			    		case b: hsl.h = 60 * ((r - g) / d + 4); break;
-			    	}
-			    	hsl.h /= 6;
-			    }
-			    return hsl;
-			},
-			rgb = function(color) {
-				if(typeof(color) != "string") {
-					console.error("invalid color " + color + " is not string ");
-				} else if(! reg_hex_color.exec(color)){
-					console.error("invalid format color " + color);
-				}
-
-				return {
-					red : parseInt("0x" + color.substring(1, 3)),
-					green : parseInt("0x" + color.substring(3, 5)),
-					blue : parseInt("0x" + color.substring(5, 7))
-				}
-			};
+		        hsl.h = hsl.s = 0; // achromatic
+		    }else{
+		    	var d = max - min;
+		    	hsl.s = hsl.l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		    	switch(max){
+		    		case r: 
+		    		hsl.h = 60 * (((g - b) / d) % 6); 
+		    		if (hsl.h < 0) {
+		    			hsl.h += 360;
+		    		}
+		    		break;
+		    		case g: hsl.h = 60 * ((b - r) / d + 2); break;
+		    		case b: hsl.h = 60 * ((r - g) / d + 4); break;
+		    	}
+		    	hsl.h /= 6;
+		    }
+		    return hsl;
+		},
+		rgb = function(color) {
+			if(typeof(color) != "string") {
+				console.error("invalid color " + color + " is not string ");
+			} else if(! reg_hex_color.exec(color)){
+				console.error("invalid format color " + color);
+			}
 
 			return {
-				rgbToHex : function(elem, jQueryProperty, propertyName) {
+				red : parseInt("0x" + color.substring(1, 3)),
+				green : parseInt("0x" + color.substring(3, 5)),
+				blue : parseInt("0x" + color.substring(5, 7))
+			}
+		};
+
+		return {
+			rgbToHex : function(elem, jQueryProperty, propertyName) {
 				//reformat rgb(0, 0, 0) to #000000 
 
 				if (elem.currentStyle) {
