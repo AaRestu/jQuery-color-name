@@ -137,6 +137,12 @@
 				
 				var color = $(this).css('colorHex');
 				return name(color, opt);
+			},
+			getNameBorderColor: function(opt) {
+				opt = $.extend({}, default_opt_get_name, opt||{});
+				
+				var color = $(this).css('borderColorHex');
+				return name(color, opt);
 			}
 		}
 	}();
@@ -153,12 +159,19 @@
 		}
 	}
 
+	$.cssHooks.borderColorHex = {
+		get: function(elem) {
+			return ColorName.rgbToHex(elem, 'borderColor', 'border-color')
+		}
+	}
+
 	String.prototype.getColorName = ColorName.getName;
 	String.prototype.getColorIdentik = ColorName.getColorIdentik;
 
 	$.fn.extend({
 		getNameBackgroundColor : ColorName.getNameBackgroundColor,
-		getNameFontColor : ColorName.getNameFontColor
+		getNameFontColor : ColorName.getNameFontColor,
+		getNameBorderColor : ColorName.getNameBorderColor
 	})
 })(jQuery);
 
