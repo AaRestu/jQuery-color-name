@@ -24,12 +24,23 @@
 					check = -1,
 					result;
 
+				var color_hsl = rgb_to_hsl(color_rgb);
+
 				for(var color_name in opt.color_data) {
 					var color_d_rgb = rgb(opt.color_data[color_name]);
+					var color_d_hsl = rgb_to_hsl(color_d_rgb);
 
-					var check_n = 	Math.abs(color_rgb.red - color_d_rgb.red) +
-									Math.abs(color_rgb.green - color_d_rgb.green)
+					var check_hsl = Math.pow(Math.abs(color_hsl.h - color_d_hsl.h), 2) +
+									Math.pow(Math.abs(color_hsl.s - color_d_hsl.s), 2) +
+									Math.abs(color_hsl.l -  color_d_hsl.l);
+
+					var check_rgb = Math.abs(color_rgb.red - color_d_rgb.red) +
+									Math.abs(color_rgb.green - color_d_rgb.green) +
 									Math.abs(color_rgb.blue -  color_d_rgb.blue);
+
+					var check_n = check_hsl + check_rgb;
+
+					console.log(color_name + " " + check_n + " rgb " + check_rgb);
 					
 					if(check < 0 || check_n < check) {
 						result = color_name;
@@ -40,6 +51,37 @@
 					name : result, 
 					color_identik : opt.color_data[result] 
 				};
+			},
+			rgb_to_hsl = function(color_rgb) {
+				var r = color_rgb.red / 255, 
+					g = color_rgb.green / 255, 
+					b = color_rgb.blue / 255,
+					hsl = {'h': 0, 's': 0, 'l': 0};
+
+			    var max = Math.max(r, g, b), 
+			    	min = Math.min(r, g, b);
+
+			    hsl.l = (max + min) / 2;
+
+			    if(max == min){
+			        hsl.h = hsl.s = 0; // achromatic
+			    }else{
+			        var d = max - min;
+			        hsl.s = hsl.l > 0.5 ? d / (2 - max - min) : d / (max + min);
+			        switch(max){
+			            case r: 
+			            	hsl.h = 60 * (((g - b) / d) % 6); 
+			            	if (hsl.h < 0) {
+								hsl.h += 360;
+							}
+			            	break;
+			            case g: hsl.h = 60 * ((b - r) / d + 2); break;
+			            case b: hsl.h = 60 * ((r - g) / d + 4); break;
+			        }
+			        hsl.h /= 6;
+			    }
+			    console.log(hsl);
+			    return hsl;
 			},
 			rgb = function(color) {
 				if(typeof(color) != "string") {
@@ -65,6 +107,13 @@
 				opt = $.extend({}, default_opt_get_name, opt||{});
 				
 				return name(this.toString(), opt);
+			},
+			getNameBackgroundColor: function(opt) {
+				opt = $.extend({}, default_opt_get_name, opt||{});
+				
+				var color = $(this).css('backgroundColorHex');
+				console.log(color);
+				return name(color, opt);
 			}
 		}
 	}();
@@ -90,6 +139,10 @@
 
 	String.prototype.getColorName = ColorName.getName;
 	String.prototype.getColorIdentik = ColorName.getColorIdentik;
+
+	$.fn.extend({
+		getNameBackgroundColor : ColorName.getNameBackgroundColor
+	})
 })(jQuery);
 
 var global_color_data = {
