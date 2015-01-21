@@ -39,8 +39,6 @@
 									Math.abs(color_rgb.blue -  color_d_rgb.blue);
 
 					var check_n = check_hsl + check_rgb;
-
-					console.log(color_name + " " + check_n + " rgb " + check_rgb);
 					
 					if(check < 0 || check_n < check) {
 						result = color_name;
@@ -80,7 +78,6 @@
 			        }
 			        hsl.h /= 6;
 			    }
-			    console.log(hsl);
 			    return hsl;
 			},
 			rgb = function(color) {
