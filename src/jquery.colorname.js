@@ -7,76 +7,76 @@
  *
  */
 
-(function($) {
-	var ColorName = function() {
-		var reg_hex_color = /^#[0-9abcdefABCDEF]{6}$/,
-			default_opt_get_name = {
-				call_after : function() {},
-				call_before : function() {},
-				color_data : {}
-			},
-			name = function(color, opt) {
-				if(!Object.keys(opt.color_data).length) {
-					opt.color_data = global_color_data;
-				}
+ (function($) {
+ 	var ColorName = function() {
+ 		var reg_hex_color = /^#[0-9abcdefABCDEF]{6}$/,
+ 		default_opt_get_name = {
+ 			call_after : function() {},
+ 			call_before : function() {},
+ 			color_data : {}
+ 		},
+ 		name = function(color, opt) {
+ 			if(!Object.keys(opt.color_data).length) {
+ 				opt.color_data = global_color_data;
+ 			}
 
-				var color_rgb = rgb(color),
-					check = -1,
-					result;
+ 			var color_rgb = rgb(color),
+ 			check = -1,
+ 			result;
 
-				var color_hsl = rgb_to_hsl(color_rgb);
+ 			var color_hsl = rgb_to_hsl(color_rgb);
 
-				for(var color_name in opt.color_data) {
-					var color_d_rgb = rgb(opt.color_data[color_name]);
-					var color_d_hsl = rgb_to_hsl(color_d_rgb);
+ 			for(var color_name in opt.color_data) {
+ 				var color_d_rgb = rgb(opt.color_data[color_name]);
+ 				var color_d_hsl = rgb_to_hsl(color_d_rgb);
 
-					var check_hsl = Math.pow(Math.abs(color_hsl.h - color_d_hsl.h), 2) +
-									Math.pow(Math.abs(color_hsl.s - color_d_hsl.s), 2) +
-									Math.pow(Math.abs(color_hsl.l -  color_d_hsl.l), 2);
+ 				var check_hsl = Math.pow(Math.abs(color_hsl.h - color_d_hsl.h), 2) +
+ 				Math.pow(Math.abs(color_hsl.s - color_d_hsl.s), 2) +
+ 				Math.pow(Math.abs(color_hsl.l -  color_d_hsl.l), 2);
 
-					var check_rgb = Math.abs(color_rgb.red - color_d_rgb.red) +
-									Math.abs(color_rgb.green - color_d_rgb.green) +
-									Math.abs(color_rgb.blue -  color_d_rgb.blue);
+ 				var check_rgb = Math.abs(color_rgb.red - color_d_rgb.red) +
+ 				Math.abs(color_rgb.green - color_d_rgb.green) +
+ 				Math.abs(color_rgb.blue -  color_d_rgb.blue);
 
-					var check_n = check_hsl + check_rgb;
-					
-					if(check < 0 || check_n < check) {
-						result = color_name;
-						check = check_n;
-					}
-				};
-				return { 
-					name : result, 
-					color_identik : opt.color_data[result] 
-				};
-			},
-			rgb_to_hsl = function(color_rgb) {
-				var r = color_rgb.red / 255, 
-					g = color_rgb.green / 255, 
-					b = color_rgb.blue / 255,
-					hsl = {'h': 0, 's': 0, 'l': 0};
+ 				var check_n = check_hsl + check_rgb;
+ 				
+ 				if(check < 0 || check_n < check) {
+ 					result = color_name;
+ 					check = check_n;
+ 				}
+ 			};
+ 			return { 
+ 				name : result, 
+ 				color_identik : opt.color_data[result] 
+ 			};
+ 		},
+ 		rgb_to_hsl = function(color_rgb) {
+ 			var r = color_rgb.red / 255, 
+ 			g = color_rgb.green / 255, 
+ 			b = color_rgb.blue / 255,
+ 			hsl = {'h': 0, 's': 0, 'l': 0};
 
-			    var max = Math.max(r, g, b), 
-			    	min = Math.min(r, g, b);
+ 			var max = Math.max(r, g, b), 
+ 			min = Math.min(r, g, b);
 
-			    hsl.l = (max + min) / 2;
+ 			hsl.l = (max + min) / 2;
 
-			    if(max == min){
+ 			if(max == min){
 			        hsl.h = hsl.s = 0; // achromatic
 			    }else{
-			        var d = max - min;
-			        hsl.s = hsl.l > 0.5 ? d / (2 - max - min) : d / (max + min);
-			        switch(max){
-			            case r: 
-			            	hsl.h = 60 * (((g - b) / d) % 6); 
-			            	if (hsl.h < 0) {
-								hsl.h += 360;
-							}
-			            	break;
-			            case g: hsl.h = 60 * ((b - r) / d + 2); break;
-			            case b: hsl.h = 60 * ((r - g) / d + 4); break;
-			        }
-			        hsl.h /= 6;
+			    	var d = max - min;
+			    	hsl.s = hsl.l > 0.5 ? d / (2 - max - min) : d / (max + min);
+			    	switch(max){
+			    		case r: 
+			    		hsl.h = 60 * (((g - b) / d) % 6); 
+			    		if (hsl.h < 0) {
+			    			hsl.h += 360;
+			    		}
+			    		break;
+			    		case g: hsl.h = 60 * ((b - r) / d + 2); break;
+			    		case b: hsl.h = 60 * ((r - g) / d + 4); break;
+			    	}
+			    	hsl.h /= 6;
 			    }
 			    return hsl;
 			},
@@ -94,24 +94,27 @@
 				}
 			};
 
-		return {
-			rgbToHex : function(elem, jQueryProperty, propertyName) {
+			return {
+				rgbToHex : function(elem, jQueryProperty, propertyName) {
 				//reformat rgb(0, 0, 0) to #000000 
 
-				if (elem.currentStyle)
-	            var bg = elem.currentStyle[jQueryProperty];
-		        else if (window.getComputedStyle)
-		            var bg = document.defaultView.getComputedStyle(elem,
-		                null).getPropertyValue(propertyName);
-		        if (bg.search("rgb") == -1)
-		            return bg;
-		        else {
-		            bg = bg.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-		            function hex(x) {
-		                return ("0" + parseInt(x).toString(16)).slice(-2);
-		            }
-		            return "#" + hex(bg[1]) + hex(bg[2]) + hex(bg[3]);
-		        }
+				if (elem.currentStyle) {
+					var bg = elem.currentStyle[jQueryProperty];
+				} else if (window.getComputedStyle) {
+					var bg = document.defaultView.getComputedStyle(elem,
+						null).getPropertyValue(propertyName);
+				}
+				
+				if (bg.search("rgb") == -1) {
+					return bg;
+				}else {
+					bg = bg.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+					function hex(x) {
+						return ("0" + parseInt(x).toString(16)).slice(-2);
+					}
+					return "#" + hex(bg[1]) + hex(bg[2]) + hex(bg[3]);
+				}
 			},
 			getName : function(opt) {
 				opt = $.extend({}, default_opt_get_name, opt||{});
@@ -139,15 +142,15 @@
 	}();
 
 	$.cssHooks.backgroundColorHex = {
-	    get: function(elem) {
-	    	return ColorName.rgbToHex(elem, 'backgroundColor', 'background-color')
-	    }
+		get: function(elem) {
+			return ColorName.rgbToHex(elem, 'backgroundColor', 'background-color')
+		}
 	}
 
 	$.cssHooks.colorHex = {
-	    get: function(elem) {
-	    	return ColorName.rgbToHex(elem, 'color', 'color');
-	    }
+		get: function(elem) {
+			return ColorName.rgbToHex(elem, 'color', 'color');
+		}
 	}
 
 	String.prototype.getColorName = ColorName.getName;
