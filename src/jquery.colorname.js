@@ -32,7 +32,7 @@
 
 					var check_hsl = Math.pow(Math.abs(color_hsl.h - color_d_hsl.h), 2) +
 									Math.pow(Math.abs(color_hsl.s - color_d_hsl.s), 2) +
-									Math.abs(color_hsl.l -  color_d_hsl.l);
+									Math.pow(Math.abs(color_hsl.l -  color_d_hsl.l), 2);
 
 					var check_rgb = Math.abs(color_rgb.red - color_d_rgb.red) +
 									Math.abs(color_rgb.green - color_d_rgb.green) +
